@@ -27,10 +27,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install Subversion
+      - name: Ensure Subversion is available
         run: |
-          sudo apt-get update
-          sudo apt-get install -y subversion
+          if ! command -v svn >/dev/null 2>&1; then
+            sudo apt-get install -y subversion
+          fi
+          svn --version --quiet
 
       - name: Fetch selected official assets at the recorded revision
         run: |
