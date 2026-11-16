@@ -28,3 +28,12 @@ jobs:
 
       - name: Run interface test
         run: ./renderer-contract-test
+
+      - name: Compile Xbox 360 controller adapter test
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            Platform/Xbox360/Tests/xbox360_input_adapter_test.cpp \
+            -o xbox360-input-adapter-test
+
+      - name: Run Xbox 360 controller adapter test
+        run: ./xbox360-input-adapter-test
