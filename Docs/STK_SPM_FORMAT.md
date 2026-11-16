@@ -28,19 +28,49 @@ The reader is a separate implementation; it does not copy the upstream loader's 
 
 The output keeps each submesh's LOD index and material index. A later STK-to-Redraw bridge must preserve the material grouping and select one LOD at a time; drawing every LOD together would be incorrect.
 
+## Official asset validation
+
+At SVN revision **18627**, the portable reader successfully parsed these real upstream assets:
+
+| Asset | Materials | Submeshes | Vertices | Indices | Skinning |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `karts/adiumy/adiumy.spm` | 4 | 4 | 4,710 | 19,746 | Required |
+| `tracks/black_forest/black_forest_track.spm` | 64 | 64 | 61,227 | 145,743 | Not required |
+
+SHA-256:
+
+- `adiumy.spm`: `30518d2f8e03ab56b5e042c58f73b96f1630c6aa1c65a08c35dd4ec4b280f2c2`
+- `black_forest_track.spm`: `a6cb15db7eb0841cae8160cb50220d1bdfec1eccdc24d21e6e02c8785393c8a1`
+
+The CI validation fetches only those two SPM files and their per-asset `licenses.txt` files; it does not redistribute the asset files.
+
+## SPM-to-Redraw bridge
+
+`STK/Source/SPMRedrawBridge.cpp` converts one selected LOD into Redraw's vertex layout and splits index streams into batches of at most 65,535 indices, matching the current Xenos backend's per-draw limit.
+
+- Static meshes can be converted directly.
+- Skinned meshes are rejected unless the caller explicitly opts into a static, unevaluated base pose.
+- The bridge preserves material and LOD IDs but does not yet load the referenced textures or interpret STK's full material definitions.
+- Vertex colors and second UV sets are currently not passed through to Redraw.
+
 ## Current limitations
 
 - `SPMS` space-partitioned meshes are rejected.
 - `SPMA` skinned meshes have their base geometry decoded and are marked `requires_skinning`; joint animation and skinning are not evaluated yet.
 - The reader does not load image files, apply STK material scripts, or upload mesh data to the GPU.
-- The Xbox 360 renderer currently has a smaller index-count limit per draw than the reader's format limit. The bridge must split large submeshes into safe draw batches.
-- Only a synthetic format fixture is currently tested. Real official kart/track files still need to be fetched and checked before this reader is treated as production-ready.
+- The bridge and renderer have not yet been connected to STK's live scene submission.
+- Only the selected kart and track files above have been validated against real assets; the rest of the official asset repository still needs coverage.
 
-Run the portable test with:
+Run the portable tests with:
 
 ```bash
 g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
   STK/Source/SPMReader.cpp STK/Tests/spm_reader_test.cpp \
   -o spm-reader-test
 ./spm-reader-test
+
+g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+  STK/Source/SPMReader.cpp STK/Source/SPMRedrawBridge.cpp \
+  STK/Tests/spm_redraw_bridge_test.cpp -o spm-redraw-bridge-test
+./spm-redraw-bridge-test
 ```
