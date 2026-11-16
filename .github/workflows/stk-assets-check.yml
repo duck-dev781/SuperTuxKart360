@@ -33,3 +33,17 @@ jobs:
 
       - name: Show exact upstream revisions
         run: cat External/stk-upstream-lock.txt
+
+      - name: Package pinned upstream inputs
+        run: |
+          tar --exclude='stk-code/.git' --exclude='stk-assets/.svn' \
+            -czf stk-upstream-inputs.tar.gz \
+            -C External stk-code stk-assets stk-upstream-lock.txt
+
+      - name: Upload upstream source and runtime assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: stk-upstream-inputs
+          path: stk-upstream-inputs.tar.gz
+          if-no-files-found: error
+          retention-days: 30
