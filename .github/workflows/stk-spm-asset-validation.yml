@@ -96,6 +96,6 @@ jobs:
       - name: Inspect embedded SPM material texture names
         run: |
           echo "=== Adiumy SPM strings ==="
-          strings -n 3 Build/AssetProbe/adiumy.spm | head -80
+          strings -n 3 Build/AssetProbe/adiumy.spm | sed -n '1,80p'
           echo "=== Black Forest SPM strings ==="
-          strings -n 3 Build/AssetProbe/black_forest_track.spm | head -160
+          strings -n 3 Build/AssetProbe/black_forest_track.spm | sed -n '1,160p'
