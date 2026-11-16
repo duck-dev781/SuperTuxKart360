@@ -1,0 +1,55 @@
+name: Validate official STK SPM assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "STK/Source/SPMReader.*"
+      - "STK/Tests/spm_asset_probe.cpp"
+      - "STK/Tests/spm_reader_test.cpp"
+      - "Docs/STK_SPM_FORMAT.md"
+      - ".github/workflows/stk-spm-asset-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Parse official kart and track meshes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install Subversion
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y subversion
+
+      - name: Fetch selected official assets at the recorded revision
+        run: |
+          set -euo pipefail
+          base="https://svn.code.sf.net/p/supertuxkart/code/stk-assets"
+          revision="18627"
+          mkdir -p Build/AssetProbe/licenses
+          svn export --quiet -r "$revision" "$base/karts/adiumy/adiumy.spm" Build/AssetProbe/adiumy.spm
+          svn export --quiet -r "$revision" "$base/tracks/black_forest/black_forest_track.spm" Build/AssetProbe/black_forest_track.spm
+          svn export --quiet -r "$revision" "$base/karts/adiumy/licenses.txt" Build/AssetProbe/licenses/adiumy-licenses.txt
+          svn export --quiet -r "$revision" "$base/tracks/black_forest/licenses.txt" Build/AssetProbe/licenses/black_forest-licenses.txt
+          sha256sum Build/AssetProbe/*.spm
+
+      - name: Compile SPM asset probe
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            STK/Source/SPMReader.cpp STK/Tests/spm_asset_probe.cpp \
+            -o spm-asset-probe
+
+      - name: Parse the official Adiumy kart and Black Forest track meshes
+        run: |
+          ./spm-asset-probe \
+            Build/AssetProbe/adiumy.spm \
+            Build/AssetProbe/black_forest_track.spm
