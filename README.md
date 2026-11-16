@@ -46,6 +46,11 @@ The target is the complete original SuperTuxKart experience, not a recreation wi
 
 "Official assets" means the original assets distributed by the SuperTuxKart project, not automatically unrestricted assets. Track the exact source revision, asset package revision, per-file license, copyright notice, and attribution requirements before copying or redistributing content. Preserve upstream notices and do not assume the source-code license applies identically to every sound, image, model, font, or other bundled component.
 
+
+## Official runtime assets
+
+The port fetches the **real upstream runtime asset repository** (not replacement content and not the artist-only media repository) alongside the official STK source. Run `bash Build/Fetch-STK-Assets.sh` to populate `External/stk-code` and `External/stk-assets`, verify the main asset groups, and record the exact upstream revisions. See [Docs/ASSETS.md](Docs/ASSETS.md). The large binary asset checkout is kept out of this Git repository and fetched into the build workspace from the official SuperTuxKart SVN host.
+
 ## Redraw design principles
 
 Redraw is intended to be lightweight and scalable rather than imitate a desktop renderer feature-for-feature.
