@@ -60,7 +60,7 @@ Redraw is intended to be lightweight and scalable rather than imitate a desktop 
 - Scale particles, post-processing, and shadow quality to measured performance.
 - Keep the game-facing interfaces separate from Xbox 360-specific implementation details.
 
-The Xenos backend currently covers a narrow bring-up path: frame lifecycle, indexed mesh buffers, one 32-bit texture format, a basic shader pair, depth/culling/blending state, and display presentation. It is not yet feature-complete for STK's material and scene systems. The renderer and platform layer must be validated on actual target hardware; no specific frame rate or visual feature is guaranteed.
+The Xenos backend currently covers a narrow bring-up path: frame lifecycle, indexed mesh buffers, one 32-bit texture format, a basic shader pair, depth/culling/blending state, and display presentation. The current title entry point is being extended into a first drive slice that loads the official Black Forest track mesh and Adiumy kart mesh, then applies a small controller-driven movement model. Textures/material scripts, skeletal animation, and STK's full scene systems are still missing. The renderer and platform layer must be validated on actual target hardware; no specific frame rate or visual feature is guaranteed.
 
 ## Controller plan
 
@@ -142,7 +142,7 @@ GitHub Actions has three separate responsibilities:
 - fetch and package the pinned STK source and official runtime assets;
 - build the Xenos renderer test as a native Xbox 360 XEX with the pinned xsdk toolchain.
 
-The XEX workflow validates the target compiler, shader pipeline, and Redraw backend build. It does **not** build the complete STK game or prove that the title runs on a physical console.
+The XEX workflow now builds a first playable drive slice with the official Adiumy kart and Black Forest track asset folders packaged beside the XEX. It still does **not** build the complete STK game, and a successful cross-compile does not prove that the title runs on a physical console.
 
 ## Contributing
 
