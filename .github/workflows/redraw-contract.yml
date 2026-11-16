@@ -46,3 +46,13 @@ jobs:
 
       - name: Run STK SPM reader test
         run: ./spm-reader-test
+
+      - name: Compile STK-to-Redraw bridge test
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            STK/Source/SPMReader.cpp STK/Source/SPMRedrawBridge.cpp \
+            STK/Tests/spm_redraw_bridge_test.cpp \
+            -o spm-redraw-bridge-test
+
+      - name: Run STK-to-Redraw bridge test
+        run: ./spm-redraw-bridge-test
