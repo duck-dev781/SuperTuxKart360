@@ -25,6 +25,7 @@ namespace redraw
         virtual void clear(const Color& color, bool clear_depth);
         virtual void setViewProjection(const Matrix4& view,
                                        const Matrix4& projection);
+        virtual void setWorld(const Matrix4& world);
 
         virtual MeshHandle createMesh(const MeshDesc& desc);
         virtual void releaseMesh(MeshHandle mesh);
@@ -63,6 +64,7 @@ namespace redraw
         uint32_t m_frame_address;
         uint32_t m_clear_argb;
         Matrix4 m_view_projection;
+        Matrix4 m_world;
         XsdkShader m_vertex_shader;
         XsdkShader m_pixel_shader;
         XsdkTexture m_white_texture;
