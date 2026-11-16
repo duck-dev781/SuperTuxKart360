@@ -77,7 +77,7 @@ namespace stk360
                         if (c == quote)
                             quote = 0;
                     }
-                    else if (c == '"' || c == ''')
+                    else if (c == '"' || c == 39)
                         quote = c;
                     else if (c == '>')
                         break;
@@ -138,7 +138,7 @@ namespace stk360
                     while (pos < body.size() && (body[pos] == ' ' || body[pos] == '\t' ||
                            body[pos] == '\r' || body[pos] == '\n'))
                         ++pos;
-                    if (pos >= body.size() || (body[pos] != '"' && body[pos] != '''))
+                    if (pos >= body.size() || (body[pos] != '"' && body[pos] != 39))
                         break;
 
                     const char value_quote = body[pos++];
