@@ -43,7 +43,7 @@ PREFIX="${PREFIX}" WORK="${WORK}" JOBS="${JOBS}" \
     bash "${XSDK_DIR}/tools/toolchain/build.sh"
 
 echo "== Build the pinned shader compiler =="
-python3 "${GLSLANG_DIR}/update_glslang_sources.py"
+(cd "${GLSLANG_DIR}" && python3 update_glslang_sources.py)
 cmake -S "${GLSLANG_DIR}" -B "${GLSLANG_DIR}/build" -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_OPT=ON \
