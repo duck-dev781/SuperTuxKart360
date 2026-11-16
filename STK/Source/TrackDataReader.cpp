@@ -39,7 +39,6 @@ namespace stk360
 
                 if (*cursor + 1 < size && xml[*cursor + 1] == '!')
                 {
-                    const std::string marker = "-->";
                     unsigned int end = *cursor + 2;
                     while (end + 2 < size &&
                            !(xml[end] == '-' && xml[end + 1] == '-' && xml[end + 2] == '>'))
