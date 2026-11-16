@@ -5,9 +5,10 @@
  * Redraw: minimal renderer contract.
  *
  * This header intentionally uses a small C++03-compatible interface and
- * contains no Xbox SDK or desktop graphics headers. A platform backend will
- * implement this contract. It is an interface scaffold, not a working GPU
- * renderer yet.
+ * contains no Xbox SDK or desktop graphics headers. Platform backends
+ * implement this contract; the Xbox 360 Xenos backend is in ../Xbox360.
+ * That backend is an early bring-up implementation, not yet feature-complete
+ * for SuperTuxKart's full material and scene requirements.
  */
 
 namespace redraw
