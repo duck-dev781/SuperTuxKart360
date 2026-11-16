@@ -37,3 +37,12 @@ jobs:
 
       - name: Run Xbox 360 controller adapter test
         run: ./xbox360-input-adapter-test
+
+      - name: Compile STK SPM reader test
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            STK/Source/SPMReader.cpp STK/Tests/spm_reader_test.cpp \
+            -o spm-reader-test
+
+      - name: Run STK SPM reader test
+        run: ./spm-reader-test
