@@ -38,9 +38,25 @@ jobs:
           mkdir -p Build/AssetProbe/licenses
           svn export --quiet -r "$revision" "$base/karts/adiumy/adiumy.spm" Build/AssetProbe/adiumy.spm
           svn export --quiet -r "$revision" "$base/tracks/black_forest/black_forest_track.spm" Build/AssetProbe/black_forest_track.spm
+          svn export --quiet -r "$revision" "$base/karts/adiumy/kart.xml" Build/AssetProbe/adiumy-kart.xml
+          svn export --quiet -r "$revision" "$base/karts/adiumy/materials.xml" Build/AssetProbe/adiumy-materials.xml
+          svn export --quiet -r "$revision" "$base/tracks/black_forest/track.xml" Build/AssetProbe/black_forest-track.xml
+          svn export --quiet -r "$revision" "$base/tracks/black_forest/scene.xml" Build/AssetProbe/black_forest-scene.xml
+          svn export --quiet -r "$revision" "$base/tracks/black_forest/quads.xml" Build/AssetProbe/black_forest-quads.xml
+          svn export --quiet -r "$revision" "$base/tracks/black_forest/graph.xml" Build/AssetProbe/black_forest-graph.xml
           svn export --quiet -r "$revision" "$base/karts/adiumy/licenses.txt" Build/AssetProbe/licenses/adiumy-licenses.txt
           svn export --quiet -r "$revision" "$base/tracks/black_forest/licenses.txt" Build/AssetProbe/licenses/black_forest-licenses.txt
           sha256sum Build/AssetProbe/*.spm
+          echo '=== Black Forest track quads ==='
+          sed -n '1,180p' Build/AssetProbe/black_forest-quads.xml
+          echo '=== Black Forest track graph ==='
+          sed -n '1,140p' Build/AssetProbe/black_forest-graph.xml
+          echo '=== Black Forest track config ==='
+          sed -n '1,140p' Build/AssetProbe/black_forest-track.xml
+          echo '=== Adiumy kart config ==='
+          sed -n '1,140p' Build/AssetProbe/adiumy-kart.xml
+          echo '=== Black Forest scene config ==='
+          sed -n '1,100p' Build/AssetProbe/black_forest-scene.xml
 
       - name: Compile SPM asset probe
         run: |
