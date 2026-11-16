@@ -85,6 +85,14 @@ namespace stk360
         return (short)(((unsigned int)value * 32767u) / 255u);
     }
 
+    inline short invertAxis(short value)
+    {
+        /* Negating -32768 cannot be represented by a signed 16-bit value. */
+        if (value == (-32767 - 1))
+            return 32767;
+        return (short)-value;
+    }
+
     inline void translateXInput(const XInputState& source,
                                 STKControllerState* destination)
     {
@@ -109,9 +117,9 @@ namespace stk360
 
         destination->buttons = b;
         destination->axes[STK_AXIS_LEFT_X] = source.thumb_lx;
-        destination->axes[STK_AXIS_LEFT_Y] = (short)-source.thumb_ly;
+        destination->axes[STK_AXIS_LEFT_Y] = invertAxis(source.thumb_ly);
         destination->axes[STK_AXIS_RIGHT_X] = source.thumb_rx;
-        destination->axes[STK_AXIS_RIGHT_Y] = (short)-source.thumb_ry;
+        destination->axes[STK_AXIS_RIGHT_Y] = invertAxis(source.thumb_ry);
         destination->axes[STK_AXIS_LEFT_TRIGGER] = triggerToAxis(source.left_trigger);
         destination->axes[STK_AXIS_RIGHT_TRIGGER] = triggerToAxis(source.right_trigger);
     }
