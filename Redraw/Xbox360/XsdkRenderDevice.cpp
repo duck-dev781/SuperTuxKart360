@@ -50,7 +50,10 @@ namespace redraw
         std::memset(&m_alpha_blend, 0, sizeof(m_alpha_blend));
 
         for (unsigned int i = 0; i < 16; ++i)
+        {
             m_view_projection.m[i] = (i % 5 == 0) ? 1.0f : 0.0f;
+            m_world.m[i] = (i % 5 == 0) ? 1.0f : 0.0f;
+        }
     }
 
     XsdkRenderDevice::~XsdkRenderDevice()
@@ -294,6 +297,11 @@ namespace redraw
         m_view_projection = multiply(projection, view);
     }
 
+    void XsdkRenderDevice::setWorld(const Matrix4& world)
+    {
+        m_world = world;
+    }
+
     MeshHandle XsdkRenderDevice::createMesh(const MeshDesc& desc)
     {
         if (!m_initialized || !desc.vertices || !desc.indices ||
@@ -385,7 +393,8 @@ namespace redraw
         xsdk_gpu_set_shaders(&m_vertex_shader, &m_pixel_shader);
         xsdk_built_shader_set_literals(&redraw_xbox360_vert);
         xsdk_built_shader_set_literals(&redraw_xbox360_frag);
-        xsdk_gpu_set_vertex_constants(0, m_view_projection.m, 4);
+        const Matrix4 mvp = multiply(m_view_projection, m_world);
+        xsdk_gpu_set_vertex_constants(0, mvp.m, 4);
 
         const float diffuse[4] =
         {
