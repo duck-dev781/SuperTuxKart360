@@ -32,6 +32,20 @@ Build/
 LICENSES/                Third-party license and attribution records
 ```
 
+## Content preservation and Xbox-specific customization
+
+The target is the complete original SuperTuxKart experience, not a recreation with replacement content.
+
+- **Original STK content:** use the official upstream karts, characters, tracks, models, textures, menus, music, sound effects, and other game content wherever technically possible and permitted by each item's license.
+- **Original game behavior:** preserve the upstream race modes, kart physics, items, AI, progression, and menu flows wherever possible.
+- **Redraw renderer:** replace/adapt the rendering backend for Xbox 360. Redraw changes the rendering implementation; it is not intended to replace STK's art direction or content.
+- **Controller support:** provide native Xbox 360 controller handling, sensible default mappings, and configurable bindings.
+- **Xbox-specific settings:** add a separate settings area for Redraw and console options, such as resolution/display behavior where supported, graphics quality, shadow quality, effects, performance options, and controller configuration. Keep original STK gameplay settings and menu behavior intact where possible.
+
+### Asset and audio licensing
+
+"Official assets" means the original assets distributed by the SuperTuxKart project, not automatically unrestricted assets. Track the exact source revision, asset package revision, per-file license, copyright notice, and attribution requirements before copying or redistributing content. Preserve upstream notices and do not assume the source-code license applies identically to every sound, image, model, font, or other bundled component.
+
 ## Redraw design principles
 
 Redraw is intended to be lightweight and scalable rather than imitate a desktop renderer feature-for-feature.
