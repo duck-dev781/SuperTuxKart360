@@ -1,0 +1,30 @@
+name: Redraw contract checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  renderer-interface:
+    name: Compile Redraw interface contract
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up C++ compiler
+        run: sudo apt-get update && sudo apt-get install -y g++
+
+      - name: Compile C++03 interface test
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            Redraw/Tests/renderer_contract_test.cpp \
+            -o renderer-contract-test
+
+      - name: Run interface test
+        run: ./renderer-contract-test
