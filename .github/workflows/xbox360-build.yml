@@ -1,0 +1,47 @@
+name: Xbox 360 Redraw XEX build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/xbox360-build.yml"
+      - "Build/Build-Xbox360.sh"
+      - "Redraw/**"
+      - "Platform/Xbox360/**"
+      - "Docs/XBOX360_TOOLCHAIN.md"
+
+permissions:
+  contents: read
+
+jobs:
+  build-xex:
+    name: Build native Xbox 360 Redraw XEX
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out SuperTuxKart360
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install cross-toolchain build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential bison flex texinfo \
+            libgmp-dev libmpfr-dev libmpc-dev \
+            curl xz-utils patch python3 cmake ninja-build git
+
+      - name: Build pinned Xbox 360 toolchain, SDK, and Redraw XEX
+        env:
+          JOBS: 4
+        run: bash Build/Build-Xbox360.sh
+
+      - name: Upload native XEX
+        uses: actions/upload-artifact@v7
+        with:
+          name: redraw-xbox360-xex
+          path: Build/Xbox360/Artifacts/
+          if-no-files-found: error
+          retention-days: 30
