@@ -2,7 +2,7 @@
 
 An experimental Xbox 360 homebrew porting project built around the original **SuperTuxKart (STK)** game, with a purpose-built lightweight rendering/platform layer called **Redraw**.
 
-> **Status: early porting foundation.** The repository now contains an upstream dependency audit and a platform-neutral Redraw renderer interface. It does not yet contain a working port, compiled Xbox 360 executable, or verified multiplayer connection.
+> **Status: early porting foundation.** The repository now has a pinned open Xbox 360 homebrew toolchain path and a Redraw-to-Xenos renderer test target. That target is a hardware bring-up test, not a playable SuperTuxKart build. The complete STK source/assets, game loop, physics, menus, audio, and race integration are not yet running on Xbox 360.
 
 ## Project goals
 
@@ -19,7 +19,7 @@ Redraw/                 Rendering and engine support
   Renderer/             Rendering backend and scene submission
   Shadows/              Shadow techniques and configuration
   Textures/             Texture loading and format handling
-  Xbox360/              Xbox 360-specific renderer/platform code
+  Xbox360/              Xenos renderer backend and bring-up title
 STK/                    SuperTuxKart integration
   Source/               Game source integration
   Assets/               Asset manifests and integration notes
@@ -46,10 +46,9 @@ The target is the complete original SuperTuxKart experience, not a recreation wi
 
 "Official assets" means the original assets distributed by the SuperTuxKart project, not automatically unrestricted assets. Track the exact source revision, asset package revision, per-file license, copyright notice, and attribution requirements before copying or redistributing content. Preserve upstream notices and do not assume the source-code license applies identically to every sound, image, model, font, or other bundled component.
 
-
 ## Official runtime assets
 
-The port fetches the **real upstream runtime asset repository** (not replacement content and not the artist-only media repository) alongside the official STK source. Run `bash Build/Fetch-STK-Assets.sh` to populate `External/stk-code` and `External/stk-assets`, verify the main asset groups, and record the exact upstream revisions. See [Docs/ASSETS.md](Docs/ASSETS.md). The large binary asset checkout is kept out of this Git repository and fetched into the build workspace from the official SuperTuxKart SVN host.
+The port fetches the **real upstream runtime asset repository** (not replacement content and not the artist-only media repository) alongside the official STK source. Run `bash Build/Fetch-STK-Assets.sh` to populate `External/stk-code` and `External/stk-assets`, verify the main asset groups, and record the exact upstream revisions. See [Docs/ASSETS.md](Docs/ASSETS.md). The large binary asset checkout is kept out of this Git repository and fetched into the build workspace from the official SuperTuxKart SVN host. The source commit is pinned; the compatible historical asset revision and complete per-file license inventory remain open tasks.
 
 ## Redraw design principles
 
@@ -61,7 +60,7 @@ Redraw is intended to be lightweight and scalable rather than imitate a desktop 
 - Scale particles, post-processing, and shadow quality to measured performance.
 - Keep the game-facing interfaces separate from Xbox 360-specific implementation details.
 
-The renderer and platform layer must be validated on actual target hardware. No specific frame rate or visual feature is guaranteed at this stage.
+The Xenos backend currently covers a narrow bring-up path: frame lifecycle, indexed mesh buffers, one 32-bit texture format, a basic shader pair, depth/culling/blending state, and display presentation. It is not yet feature-complete for STK's material and scene systems. The renderer and platform layer must be validated on actual target hardware; no specific frame rate or visual feature is guaranteed.
 
 ## Controller plan
 
@@ -89,29 +88,38 @@ The project will first identify the exact STK networking version, protocol, auth
 
 A console port may require changes to sockets, TLS, certificates, DNS, serialization, timing, and platform networking. Existing-server compatibility must not be advertised until it is tested end-to-end.
 
-## Build and hardware assumptions
+## Xbox 360 build path
 
-The target is Xbox 360 homebrew. A usable build depends on a compatible C++ toolchain, platform libraries, and lawful access to the required development environment. The exact build path will be documented once the available toolchain and target console environment are confirmed.
+The initial target build uses [xenosworks/xsdk](https://github.com/xenosworks/xsdk), pinned in `Build/Build-Xbox360.sh`, to produce native Xbox 360 XEX files without Microsoft's proprietary XDK. The pinned build path targets homebrew-enabled RGH/JTAG environments supported by xsdk; it does not produce a signed retail-console title. See [Docs/XBOX360_TOOLCHAIN.md](Docs/XBOX360_TOOLCHAIN.md).
 
-Do not assume that a standard desktop STK build can simply be recompiled for Xbox 360. Dependencies, filesystem access, threading, audio, input, graphics, and networking will need platform-specific work.
+Run:
+
+```bash
+bash Build/Build-Xbox360.sh
+```
+
+GitHub Actions runs the same build and uploads the Redraw renderer test XEX. A successful cross-compile still needs testing on the actual console. Do not store proprietary SDK files, signing material, or credentials in the repository.
+
+Do not assume that a standard desktop STK build can simply be recompiled for Xbox 360. Dependencies, filesystem access, threading, audio, input, graphics, and networking need platform-specific work.
 
 ## Third-party code and assets
 
 SuperTuxKart is a separate upstream project. Its source code is distributed under GPL-3.0-or-later; individual assets and bundled components may have different licenses and attribution requirements. Before copying or redistributing any source or asset, record its exact upstream origin, license, copyright notice, and required attribution in `LICENSES/`.
 
-This repository does not claim ownership of SuperTuxKart or its assets. Redraw's own license will be selected and documented before substantial original code is published. Do not remove upstream notices or assume every asset shares the source-code license.
+The Xbox 360 build path also fetches xsdk and glslang-xenon at immutable commits. Their upstream licenses and third-party notices must be preserved in any redistributed build. This repository does not claim ownership of SuperTuxKart or its assets. Redraw's own license will be selected and documented before substantial original code is published.
 
 ## Development milestones
 
 - [x] Create the repository structure and technical plan.
-- [x] Audit the current upstream build configuration and identify major dependency groups. Exact source and asset revisions still need to be pinned before importing code.
-- [ ] Record the pinned STK source revision and matching asset revision, with a complete asset-license inventory.
-- [ ] Establish a reproducible Xbox 360 toolchain/build environment.
-- [x] Define the initial platform-neutral Redraw renderer interface.
-- [ ] Implement a backend and minimal renderer test on a confirmed toolchain.
-- [ ] Port the windowless/platform lifecycle, input, filesystem, audio, and graphics layers.
-- [ ] Bring up a minimal STK scene on target hardware.
-- [ ] Add race flow, controller mapping, assets, and performance profiling.
+- [x] Audit the pinned upstream source's major dependency groups.
+- [x] Pin the STK source-code baseline.
+- [ ] Verify a matching historical STK asset revision and complete the per-file asset-license inventory.
+- [ ] Verify the native XEX build on an actual Xbox 360.
+- [ ] Complete Redraw's texture, mesh, material, and scene support for STK.
+- [ ] Port STK's windowless/platform lifecycle, input, filesystem, audio, and graphics layers.
+- [ ] Bring up an official STK kart and track scene on target hardware.
+- [ ] Connect the STK race loop, physics, menus, and original game content.
+- [ ] Profile and test a complete playable race on the console.
 - [ ] Test LAN multiplayer, then investigate server interoperability.
 
 ## Release scope
@@ -120,13 +128,17 @@ This project targets the complete SuperTuxKart game. It is not a demo build. No 
 
 ## Technical notes
 
-See [the porting audit](Docs/PORTING_AUDIT.md) for the upstream dependency review and integration strategy. The initial renderer contract is in `Redraw/Renderer/IRenderDevice.h`; it is an interface scaffold, not a completed renderer.
+See [the porting audit](Docs/PORTING_AUDIT.md), [the Xbox 360 toolchain notes](Docs/XBOX360_TOOLCHAIN.md), and [the renderer contract](Redraw/Renderer/IRenderDevice.h). The Xenos backend implementation is in `Redraw/Xbox360/`; the test title is only a renderer/input bring-up test.
 
 ## Continuous integration
 
-GitHub Actions is used for repeatable checks and builds where the required toolchain is available. The initial workflow compiles and runs the Redraw renderer-interface smoke test using a C++03 compiler on an Ubuntu runner. This validates the portable interface only; it is **not** an Xbox 360 build and does not claim to produce an Xbox executable.
+GitHub Actions has three separate responsibilities:
 
-An Xbox 360 build job will be added only after the compatible compiler, SDK/libraries, and runner environment are established. Do not store proprietary SDK files, signing material, or credentials in the repository. Any required private runner must be configured by the repository owner.
+- compile and run the portable C++03 renderer/controller contract tests;
+- fetch and package the pinned STK source and official runtime assets;
+- build the Xenos renderer test as a native Xbox 360 XEX with the pinned xsdk toolchain.
+
+The XEX workflow validates the target compiler, shader pipeline, and Redraw backend build. It does **not** build the complete STK game or prove that the title runs on a physical console.
 
 ## Contributing
 
