@@ -1,0 +1,63 @@
+# SuperTuxKart source and Xbox 360 porting audit
+
+**Audit date:** 2026-11-16  
+**Upstream inspected:** `supertuxkart/stk-code`, moving `master` branch  
+**Status:** source reconnaissance only; no upstream source or assets have been copied into this repository.
+
+## Important version rule
+
+Do not build the port against an unpinned `master` checkout. Before importing code, record an exact upstream commit SHA and matching asset revision, then keep those revisions together. The upstream branch can change independently of this project.
+
+## What the current upstream build tells us
+
+The current upstream `CMakeLists.txt` shows that STK is not a small standalone game loop. Its build includes or links several substantial systems:
+
+| Area | Upstream component(s) | Porting consequence |
+| --- | --- | --- |
+| Physics | Bullet dynamics, collision, math | Preserve the existing physics first; measure CPU cost before changing behavior |
+| Network transport | ENet | Check socket and platform-network compatibility; protocol compatibility is a separate test |
+| Rendering | STK graphics engine and graphics utilities | This is the largest Redraw integration area; desktop graphics assumptions cannot be carried over unchanged |
+| Input | SDL2 gamepad support | Replace or adapt the input backend for Xbox 360 controller APIs |
+| Audio | OpenAL or bundled MojoAL, Ogg/Vorbis | Provide a console audio backend and validate codec/runtime support |
+| Scripting | AngelScript and mcpp | Keep script compatibility; verify compiler/runtime assumptions |
+| Text and localization | FreeType, HarfBuzz, tinygettext | Check font memory, glyph coverage, and text layout performance |
+| Images and textures | JPEG, PNG, Squish, zlib and related utilities | Audit actual asset formats and texture memory; add Xbox-friendly conversion only where needed |
+| Online services/security | libcurl and OpenSSL or MbedTLS | Audit service calls and TLS support; do not assume existing services will accept a console build |
+| Optional systems | SQLite, recorder, WiiUse, shaderc and others | Disable or replace only after tracing whether game code depends on them |
+
+This is a dependency inventory from the upstream build configuration, not a statement that every dependency is required in the Xbox build. Some are optional, desktop-only, or replaceable.
+
+## Porting strategy
+
+1. **Pin the source and assets.** Record the STK commit, asset revision, licenses, and notices before importing either.
+2. **Map platform boundaries.** Locate window/lifecycle, input, filesystem, audio, graphics, networking, timing, and threading calls in the pinned source.
+3. **Bring up Redraw independently.** Implement a small renderer contract and validate a clear + triangle + textured mesh test before connecting STK.
+4. **Preserve gameplay systems.** Keep STK race rules, kart behavior, AI, items, tracks, and Bullet physics intact wherever possible. Adapt interfaces instead of rewriting game logic prematurely.
+5. **Integrate one subsystem at a time.** Input and filesystem first, then renderer and audio, then network services.
+6. **Profile on hardware.** Set budgets for frame time, memory, texture residency, draw calls, and audio before selecting quality settings.
+
+## Redraw integration boundary
+
+Redraw should own GPU-facing resources and draw submission. STK-facing code should translate scene/material/camera data into Redraw calls. The game layer should not include Xbox-specific headers.
+
+The initial interface should stay deliberately small:
+- device initialization and shutdown
+- frame begin, clear, and present
+- view/projection matrices
+- vertex/index mesh creation and release
+- texture creation and release
+- material state and indexed draw submission
+
+Advanced effects, dynamic shadows, post-processing, and shader variants are deferred until a basic scene is stable. Static/baked lighting and conservative shadow options are preferred initially.
+
+## Not decided yet
+
+- Exact STK release/commit and matching asset revision
+- Xbox 360 compiler/toolchain and build environment
+- Available platform graphics, input, storage, audio, and network APIs
+- Whether a given upstream dependency can be reused, needs a compatibility layer, or must be replaced
+- Whether existing STK multiplayer services are compatible
+
+## Explicitly out of scope for this milestone
+
+There is no in-game updater, update client, update server, or automatic update workflow in the project plan. Revisit that only if a later release strategy requires multiple supported versions.
