@@ -446,8 +446,8 @@ namespace stk360
                 continue;
             }
 
-            unsigned int from;
-            unsigned int to;
+            unsigned int from = 0;
+            unsigned int to = 0;
             if (tag.name == "node-list")
             {
                 std::string value;
