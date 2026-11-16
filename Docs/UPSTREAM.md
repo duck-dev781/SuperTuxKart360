@@ -16,17 +16,21 @@ Use this immutable source URL when inspecting the pinned code:
 
 https://github.com/supertuxkart/stk-code/tree/b2a9f223326422aa2dd4eea28319b0c5115fde03
 
-## Asset revision: not pinned yet
+## Runtime asset revision
 
-SuperTuxKart's official source-control documentation describes the game code and game data as separate repositories: code is hosted on GitHub, while the data files are hosted through SourceForge/SVN. The matching asset revision has not yet been independently retrieved and verified.
+The official runtime assets are stored separately in the SuperTuxKart SourceForge SVN repository:
 
-Do not import or redistribute the official asset package until its exact SVN revision, per-file licensing, copyright notices, and attribution requirements have been recorded. The source commit above must be paired with a verified asset revision before the project declares its upstream baseline complete.
+`https://svn.code.sf.net/p/supertuxkart/code/stk-assets`
+
+The fetch workflow has successfully checked out and packaged the runtime asset tree, and its recorded SVN revision was **18627** in the successful 2026-11-16 run. The normal fetch script currently defaults to the repository's `HEAD`, so that number is a recorded fetch result, not yet a pinned historical revision proven to match the source commit above.
+
+Do not describe source commit `b2a9f223326422aa2dd4eea28319b0c5115fde03` plus asset revision 18627 as a tested compatible pair until the upstream history and asset compatibility have been checked. The fetch workflow's lock file records the exact pair it actually downloaded on each run.
 
 ## Next verification tasks
 
-1. Retrieve the official STK asset repository's current revision and determine which revision corresponds to the selected source baseline.
-2. Record the asset revision and source-to-assets compatibility evidence here.
-3. Inventory asset and bundled-component licenses before importing files.
+1. Determine which SVN asset revision corresponds to the selected STK source baseline.
+2. Pin that revision in `Build/Fetch-STK-Assets.sh` once compatibility is established.
+3. Inventory asset and bundled-component licenses before importing or redistributing files.
 4. Re-run the dependency audit against the pinned source commit rather than a moving branch.
 
 ## Upstream references
