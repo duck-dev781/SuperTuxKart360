@@ -2,7 +2,7 @@
 
 An experimental Xbox 360 homebrew porting project built around the original **SuperTuxKart (STK)** game, with a purpose-built lightweight rendering/platform layer called **Redraw**.
 
-> **Status: planning and repository bootstrap.** This repository does not yet contain a working port, compiled Xbox 360 executable, or verified multiplayer connection.
+> **Status: early porting foundation.** The repository now contains an upstream dependency audit and a platform-neutral Redraw renderer interface. It does not yet contain a working port, compiled Xbox 360 executable, or verified multiplayer connection.
 
 ## Project goals
 
@@ -85,13 +85,23 @@ This repository does not claim ownership of SuperTuxKart or its assets. Redraw's
 ## Development milestones
 
 - [x] Create the repository structure and technical plan.
-- [ ] Record upstream STK version, source revision, dependencies, and asset-license inventory.
+- [x] Audit the current upstream build configuration and identify major dependency groups. Exact source and asset revisions still need to be pinned before importing code.
+- [ ] Record the pinned STK source revision and matching asset revision, with a complete asset-license inventory.
 - [ ] Establish a reproducible Xbox 360 toolchain/build environment.
-- [ ] Implement Redraw platform abstractions and a minimal renderer test.
+- [x] Define the initial platform-neutral Redraw renderer interface.
+- [ ] Implement a backend and minimal renderer test on a confirmed toolchain.
 - [ ] Port the windowless/platform lifecycle, input, filesystem, audio, and graphics layers.
 - [ ] Bring up a minimal STK scene on target hardware.
 - [ ] Add race flow, controller mapping, assets, and performance profiling.
 - [ ] Test LAN multiplayer, then investigate server interoperability.
+
+## Release scope
+
+This project targets the complete SuperTuxKart game. It is not a demo build. No in-game updater, update client, update server, or automatic update workflow is currently planned; update support can be reconsidered only if a future multi-version release strategy needs it.
+
+## Technical notes
+
+See [the porting audit](Docs/PORTING_AUDIT.md) for the upstream dependency review and integration strategy. The initial renderer contract is in `Redraw/Renderer/IRenderDevice.h`; it is an interface scaffold, not a completed renderer.
 
 ## Contributing
 
