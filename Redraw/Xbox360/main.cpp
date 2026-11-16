@@ -256,12 +256,12 @@ int main()
     std::string graph_xml;
     std::string track_xml;
 
-    if (!loadBinary("game:/assets/black_forest/black_forest_track.spm",
+    if (!loadBinary("game:\\assets\\black_forest\\black_forest_track.spm",
                     &track_bytes) ||
-        !loadBinary("game:/assets/adiumy/adiumy.spm", &kart_bytes) ||
-        !loadText("game:/assets/black_forest/quads.xml", &quads_xml) ||
-        !loadText("game:/assets/black_forest/graph.xml", &graph_xml) ||
-        !loadText("game:/assets/black_forest/track.xml", &track_xml))
+        !loadBinary("game:\\assets\\adiumy\\adiumy.spm", &kart_bytes) ||
+        !loadText("game:\\assets\\black_forest\\quads.xml", &quads_xml) ||
+        !loadText("game:\\assets\\black_forest\\graph.xml", &graph_xml) ||
+        !loadText("game:\\assets\\black_forest\\track.xml", &track_xml))
     {
         xsdk_log_write("SuperTuxKart360: missing official asset files beside the XEX");
         return 1;
