@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Fetch the official SuperTuxKart source and runtime data side by side.
 # Override STK_SOURCE_REF and STK_ASSETS_REV to reproduce a known pair.
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EXTERNAL="${ROOT}/External"
 SOURCE_DIR="${EXTERNAL}/stk-code"
 ASSETS_DIR="${EXTERNAL}/stk-assets"
