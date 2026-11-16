@@ -14,6 +14,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: xbox360-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-xex:
     name: Build native Xbox 360 Redraw XEX
