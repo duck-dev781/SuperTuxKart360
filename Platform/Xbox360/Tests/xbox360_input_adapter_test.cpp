@@ -1,4 +1,4 @@
-#include "../Xbox360/Xbox360InputAdapter.h"
+#include "../Xbox360InputAdapter.h"
 
 int main()
 {
