@@ -116,9 +116,6 @@ int main()
         return 1;
     }
 
-    std::cerr << "decoded x=" << model.submeshes[0].vertices[1].position[0]
-              << " u=" << model.submeshes[0].vertices[1].uv[0]
-              << " nz=" << model.submeshes[0].vertices[0].normal[2] << "\\n";
     if (!closeEnough(model.submeshes[0].vertices[1].position[0], -0.5f) ||
         !closeEnough(model.submeshes[0].vertices[1].uv[0], 1.0f) ||
         model.submeshes[0].vertices[0].normal[2] < 0.99f)
