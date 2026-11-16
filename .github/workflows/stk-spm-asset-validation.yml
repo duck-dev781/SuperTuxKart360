@@ -67,6 +67,8 @@ jobs:
           sed -n '1,140p' Build/AssetProbe/adiumy-kart.xml
           echo '=== Black Forest scene config ==='
           sed -n '1,100p' Build/AssetProbe/black_forest-scene.xml
+          echo '=== First scene static-object records ==='
+          grep -o '<static-object[^>]*>' Build/AssetProbe/black_forest-scene.xml | sed -n '1,50p'
 
       - name: Compile SPM asset probe
         run: |
