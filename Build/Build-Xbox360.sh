@@ -70,9 +70,9 @@ replacement = r'''        if [ ! -f "$archive" ]; then
             downloaded=0
             for mirror in "${mirrors[@]}"; do
                 echo "Fetching $archive from $mirror"
-                if curl --fail --location --silent --show-error
-                    --connect-timeout 30 --max-time 900
-                    --retry 3 --retry-all-errors --retry-delay 5
+                if curl --fail --location --silent --show-error \
+                    --connect-timeout 30 --max-time 900 \
+                    --retry 3 --retry-all-errors --retry-delay 5 \
                     -o "$archive.part" "$mirror"; then
                     if echo "$sha256  $archive.part" | sha256sum -c --quiet; then
                         mv "$archive.part" "$archive"
