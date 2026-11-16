@@ -117,6 +117,12 @@ This project targets the complete SuperTuxKart game. It is not a demo build. No 
 
 See [the porting audit](Docs/PORTING_AUDIT.md) for the upstream dependency review and integration strategy. The initial renderer contract is in `Redraw/Renderer/IRenderDevice.h`; it is an interface scaffold, not a completed renderer.
 
+## Continuous integration
+
+GitHub Actions is used for repeatable checks and builds where the required toolchain is available. The initial workflow compiles and runs the Redraw renderer-interface smoke test using a C++03 compiler on an Ubuntu runner. This validates the portable interface only; it is **not** an Xbox 360 build and does not claim to produce an Xbox executable.
+
+An Xbox 360 build job will be added only after the compatible compiler, SDK/libraries, and runner environment are established. Do not store proprietary SDK files, signing material, or credentials in the repository. Any required private runner must be configured by the repository owner.
+
 ## Contributing
 
 Keep changes small and testable. Document the hardware, toolchain, build command, and test result for platform-specific changes. Never report a feature as working unless it has been tested on the stated target.
