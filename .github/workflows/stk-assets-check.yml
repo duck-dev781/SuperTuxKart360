@@ -1,0 +1,35 @@
+name: Verify official STK runtime assets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "Build/Fetch-STK-Assets.sh"
+      - "Docs/ASSETS.md"
+      - ".github/workflows/stk-assets-check.yml"
+  pull_request:
+    paths:
+      - "Build/Fetch-STK-Assets.sh"
+      - "Docs/ASSETS.md"
+      - ".github/workflows/stk-assets-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out SuperTuxKart360
+        uses: actions/checkout@v4
+
+      - name: Install Subversion
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes subversion
+
+      - name: Fetch official source and runtime assets
+        run: bash Build/Fetch-STK-Assets.sh
+
+      - name: Show exact upstream revisions
+        run: cat External/stk-upstream-lock.txt
