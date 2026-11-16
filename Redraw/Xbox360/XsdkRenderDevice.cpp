@@ -118,7 +118,7 @@ namespace redraw
 
     bool XsdkRenderDevice::initialize(unsigned int width, unsigned int height)
     {
-        if (m_initialized || width == 0 || height == 0)
+        if (m_initialized || width != 1280 || height != 720)
             return false;
 
         NTSTATUS status = xsdk_gpu_open();
@@ -280,7 +280,9 @@ namespace redraw
         if (clear_depth)
             xsdk_gpu_set_depth_clear(1.0f, 0);
 
+        xsdk_gpu_set_resolve_clears(true, clear_depth);
         xsdk_gpu_resolve(m_frame_address, m_width, m_height, m_clear_argb);
+        xsdk_gpu_set_resolve_clears(true, true);
         xsdk_gpu_set_target(m_width, m_height);
         xsdk_gpu_set_depth_stencil(&m_depth_state);
         xsdk_gpu_set_raster(&m_raster_state);
@@ -341,6 +343,10 @@ namespace redraw
             desc.height == 0 || desc.bytes_per_pixel != 4)
             return 0;
 
+        const uint32_t minimum_pitch = desc.width * 4u;
+        if (desc.row_pitch != 0 && desc.row_pitch < minimum_pitch)
+            return 0;
+
         TextureSlot slot;
         NTSTATUS status = xsdk_texture_create(&slot.texture, XSDK_FORMAT_A8R8G8B8,
                                               desc.width, desc.height, 1, true);
@@ -389,8 +395,21 @@ namespace redraw
         xsdk_gpu_set_pixel_constants(0, diffuse, 1);
 
         xsdk_gpu_set_texture(0, bound_texture, &m_sampler_state);
-        xsdk_gpu_set_depth_stencil(&m_depth_state);
-        xsdk_gpu_set_raster(&m_raster_state);
+        XsdkDepthStencil depth = {};
+        depth.depth_test = material.depth_test;
+        depth.depth_write = material.depth_write;
+        depth.depth_compare = XSDK_COMPARE_LESS_EQUAL;
+        XsdkDepthStencilState depth_state;
+        xsdk_gpu_depth_stencil_state(&depth_state, &depth);
+        xsdk_gpu_set_depth_stencil(&depth_state);
+
+        XsdkRaster raster = {};
+        raster.cull = material.backface_cull ? XSDK_CULL_BACK : XSDK_CULL_NONE;
+        raster.front_clockwise = false;
+        raster.fill = XSDK_FILL_SOLID;
+        XsdkRasterState raster_state;
+        xsdk_gpu_raster_state(&raster_state, &raster);
+        xsdk_gpu_set_raster(&raster_state);
         xsdk_gpu_set_blend(material.alpha_blend ? &m_alpha_blend : &m_opaque_blend);
         xsdk_gpu_set_vertices(0, xsdk_gpu_address(mesh->vertices), mesh->vertex_bytes);
         xsdk_gpu_draw_indexed(XSDK_PRIMITIVE_TRIANGLE_LIST,
