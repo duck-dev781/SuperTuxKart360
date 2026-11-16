@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - "STK/Source/SPMReader.*"
+      - "STK/Source/TrackDataReader.*"
+      - "STK/Tests/track_asset_probe.cpp"
       - "STK/Tests/spm_asset_probe.cpp"
       - "STK/Tests/spm_reader_test.cpp"
       - "Docs/STK_SPM_FORMAT.md"
@@ -69,3 +71,16 @@ jobs:
           ./spm-asset-probe \
             Build/AssetProbe/adiumy.spm \
             Build/AssetProbe/black_forest_track.spm
+
+      - name: Compile track XML asset probe
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            STK/Source/TrackDataReader.cpp STK/Tests/track_asset_probe.cpp \
+            -o track-asset-probe
+
+      - name: Parse the official Black Forest track graph
+        run: |
+          ./track-asset-probe \
+            Build/AssetProbe/black_forest-quads.xml \
+            Build/AssetProbe/black_forest-graph.xml \
+            Build/AssetProbe/black_forest-track.xml
