@@ -67,15 +67,31 @@ cmake --build "${XSDK_DIR}/build/redraw-xbox360" --parallel "${JOBS}"
 OUTPUT="${ROOT}/Build/Xbox360/Artifacts"
 mkdir -p "${OUTPUT}"
 install -m 0644 "${XSDK_DIR}/build/redraw-xbox360/redraw_xbox360.xex" \
-    "${OUTPUT}/RedrawRendererTest.xex"
+    "${OUTPUT}/SuperTuxKart360.xex"
+
+echo "== Fetch official Adiumy kart and Black Forest track assets =="
+rm -rf "${OUTPUT}/assets"
+mkdir -p "${OUTPUT}/assets"
+svn export --quiet -r "${STK_ASSET_REVISION}" \
+    "${STK_ASSET_BASE}/karts/adiumy" "${OUTPUT}/assets/adiumy"
+svn export --quiet -r "${STK_ASSET_REVISION}" \
+    "${STK_ASSET_BASE}/tracks/black_forest" "${OUTPUT}/assets/black_forest"
+
 cat > "${OUTPUT}/BUILD-INFO.txt" <<INFO
-Project: SuperTuxKart360 Redraw renderer bring-up
-XEX: RedrawRendererTest.xex
+Project: SuperTuxKart360
+XEX: SuperTuxKart360.xex
+STK source baseline: ${STK_SOURCE_SHA}
+STK runtime asset SVN revision: ${STK_ASSET_REVISION}
 xsdk commit: ${XSDK_SHA}
 glslang-xenon commit: ${GLSLANG_SHA}
-Target: Xbox 360 XEX2 (unsigned homebrew; xsdk RGH/JTAG environment)
-Scope: renderer/input smoke test only; not the STK game
+Target: Xbox 360 XEX2 (xsdk homebrew target)
+Assets: official Adiumy kart and Black Forest track folders
+Controls: left stick steers, RT accelerates, LT brakes, Start resets, Back exits
+Scope: first playable drive slice using official mesh/track data and prototype arcade movement
+Not yet included: STK production physics, texture/material rendering, menus, AI, items, music, sound, and multiplayer
 INFO
 
-echo "Xbox 360 Redraw renderer XEX:"
-echo "  ${OUTPUT}/RedrawRendererTest.xex"
+echo "Xbox 360 SuperTuxKart360 build:"
+echo "  ${OUTPUT}/SuperTuxKart360.xex"
+echo "  ${OUTPUT}/assets/adiumy/"
+echo "  ${OUTPUT}/assets/black_forest/"
