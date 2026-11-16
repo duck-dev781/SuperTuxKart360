@@ -7,12 +7,15 @@ XSDK_DIR="${EXTERNAL}/xsdk"
 GLSLANG_DIR="${EXTERNAL}/glslang-xenon"
 XSDK_SHA="b08bb27350b67518f986bc60e72f7e4e6ebe6094"
 GLSLANG_SHA="d2f00185cf5feaa449f6e15c1894fb232b2b6bcd"
+STK_SOURCE_SHA="b2a9f223326422aa2dd4eea28319b0c5115fde03"
+STK_ASSET_REVISION="18627"
+STK_ASSET_BASE="https://svn.code.sf.net/p/supertuxkart/code/stk-assets"
 PREFIX="${XSDK_PREFIX:-${HOME}/xsdk-gcc}"
 WORK="${XSDK_WORK:-${HOME}/xsdk-gcc-work}"
 JOBS="${JOBS:-$(getconf _NPROCESSORS_ONLN)}"
 TOOLCHAIN="${PREFIX}/bin/powerpc-xsdk-elf-"
 
-for command in git cmake ninja python3 make; do
+for command in git cmake ninja python3 make svn; do
     command -v "${command}" >/dev/null || {
         echo "Missing required build tool: ${command}" >&2
         exit 1
