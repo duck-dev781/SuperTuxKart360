@@ -142,7 +142,7 @@ GitHub Actions has three separate responsibilities:
 - fetch and package the pinned STK source and official runtime assets;
 - build the Xenos renderer test as a native Xbox 360 XEX with the pinned xsdk toolchain.
 
-The XEX workflow now builds a first playable drive slice with the official Adiumy kart and Black Forest track asset folders packaged beside the XEX. It still does **not** build the complete STK game, and a successful cross-compile does not prove that the title runs on a physical console.
+The XEX workflow is now configured to build a first drive slice with the official Adiumy kart and Black Forest track asset folders packaged beside the XEX. The integrated title code and cross-build are still being verified; this does **not** build the complete STK game, and a successful cross-compile would not prove that the title runs on a physical console.
 
 ## Contributing
 
