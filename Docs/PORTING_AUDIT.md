@@ -31,7 +31,7 @@ This is a dependency inventory from the upstream build configuration, not a stat
 
 1. **Pin the source and assets.** Record the STK commit, asset revision, licenses, and notices before importing either.
 2. **Map platform boundaries.** Locate window/lifecycle, input, filesystem, audio, graphics, networking, timing, and threading calls in the pinned source.
-3. **Bring up Redraw independently.** Implement a small renderer contract and validate a clear + triangle + textured mesh test before connecting STK.
+3. **Bring up Redraw independently.** The repository now has a pinned xsdk-based XEX build path and an early Xenos renderer implementation. Its native XEX still needs hardware verification and it is not yet complete enough for STK's full materials/scene system.
 4. **Preserve gameplay systems.** Keep STK race rules, kart behavior, AI, items, tracks, and Bullet physics intact wherever possible. Adapt interfaces instead of rewriting game logic prematurely.
 5. **Integrate one subsystem at a time.** Input and filesystem first, then renderer and audio, then network services.
 6. **Profile on hardware.** Set budgets for frame time, memory, texture residency, draw calls, and audio before selecting quality settings.
@@ -50,11 +50,18 @@ The initial interface should stay deliberately small:
 
 Advanced effects, dynamic shadows, post-processing, and shader variants are deferred until a basic scene is stable. Static/baked lighting and conservative shadow options are preferred initially.
 
+## Current platform bring-up
+
+- The STK source baseline is pinned in `Docs/UPSTREAM.md`; the matching historical runtime asset revision and per-file license inventory remain unverified.
+- `xenosworks/xsdk` is pinned in `Build/Build-Xbox360.sh` as the current community homebrew SDK/toolchain. `Docs/XBOX360_TOOLCHAIN.md` records its scope and build steps.
+- `Redraw/Xbox360/XsdkRenderDevice.cpp` implements an initial Xenos GPU backend for frame presentation, indexed meshes, a basic shader pair, one 32-bit texture format, depth/culling/blending state, and basic controller input in its renderer test title.
+- `STK/Source/SPMReader.cpp` is a portable little-endian reader for the official STK SPM mesh format. It decodes static meshes and marks skinned meshes as requiring a later skinning implementation. Its current test uses a synthetic fixture; official asset validation is still required.
+- The current renderer test is not a playable STK build. No STK race loop, Bullet physics, menus, music, SFX, AI, or official kart/track rendering is connected yet.
+
 ## Not decided yet
 
-- Exact STK release/commit and matching asset revision
-- Xbox 360 compiler/toolchain and build environment
-- Available platform graphics, input, storage, audio, and network APIs
+- Which historical STK SVN asset revision matches the pinned source commit
+- How the full STK platform, graphics, input, storage, audio, and network dependencies will be ported or replaced
 - Whether a given upstream dependency can be reused, needs a compatibility layer, or must be replaced
 - Whether existing STK multiplayer services are compatible
 
