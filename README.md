@@ -114,7 +114,11 @@ The Xbox 360 build path also fetches xsdk and glslang-xenon at immutable commits
 - [x] Audit the pinned upstream source's major dependency groups.
 - [x] Pin the STK source-code baseline.
 - [ ] Verify a matching historical STK asset revision and complete the per-file asset-license inventory.
+- [x] Implement a little-endian SPM reader and validate official Adiumy and Black Forest meshes.
+- [x] Add SPM-to-Redraw mesh conversion with safe 65,535-index batching.
+- [x] Parse Black Forest drive quads/graph and test a first-pass controller-driven kart motion model.
 - [ ] Verify the native XEX build on an actual Xbox 360.
+- [ ] Load and render the official Black Forest track and Adiumy kart from the XEX.
 - [ ] Complete Redraw's texture, mesh, material, and scene support for STK.
 - [ ] Port STK's windowless/platform lifecycle, input, filesystem, audio, and graphics layers.
 - [ ] Bring up an official STK kart and track scene on target hardware.
