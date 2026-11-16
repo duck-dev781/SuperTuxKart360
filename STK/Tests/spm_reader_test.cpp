@@ -78,8 +78,8 @@ namespace
         appendU16(bytes, 0); // material id
 
         appendVertex(bytes, 0.0f, 0.5f, 0.0f, 0x0000u, 0x0000u);
-        appendVertex(bytes, -0.5f, -0.5f, 0.0f, 0x3800u, 0x0000u);
-        appendVertex(bytes, 0.5f, -0.5f, 0.0f, 0x0000u, 0x3800u);
+        appendVertex(bytes, -0.5f, -0.5f, 0.0f, 0x3C00u, 0x0000u);
+        appendVertex(bytes, 0.5f, -0.5f, 0.0f, 0x0000u, 0x3C00u);
 
         appendU8(bytes, 0);
         appendU8(bytes, 1);
