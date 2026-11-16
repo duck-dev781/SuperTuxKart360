@@ -188,6 +188,11 @@ namespace
         for (unsigned int i = 0; i < batches.size(); ++i)
         {
             stk360::SPMDrawBatch& batch = batches[i];
+            // Some upstream SPM LOD/material batches can be empty. Never
+            // take element-zero addresses from empty vectors.
+            if (batch.vertices.empty() || batch.indices.empty())
+                continue;
+
             if (center_model)
             {
                 for (unsigned int v = 0; v < batch.vertices.size(); ++v)
@@ -257,36 +262,64 @@ int main()
     std::string track_xml;
 
     if (!loadBinary("game:\\assets\\black_forest\\black_forest_track.spm",
-                    &track_bytes) ||
-        !loadBinary("game:\\assets\\adiumy\\adiumy.spm", &kart_bytes) ||
-        !loadText("game:\\assets\\black_forest\\quads.xml", &quads_xml) ||
-        !loadText("game:\\assets\\black_forest\\graph.xml", &graph_xml) ||
-        !loadText("game:\\assets\\black_forest\\track.xml", &track_xml))
+                    &track_bytes))
     {
-        xsdk_log_write("SuperTuxKart360: missing official asset files beside the XEX");
+        xsdk_log_write("STK360 STARTUP ERROR: cannot open assets\\black_forest\\black_forest_track.spm");
         return 1;
     }
+    xsdk_log_write("STK360 STARTUP: track SPM file opened");
+
+    if (!loadBinary("game:\\assets\\adiumy\\adiumy.spm", &kart_bytes))
+    {
+        xsdk_log_write("STK360 STARTUP ERROR: cannot open assets\\adiumy\\adiumy.spm");
+        return 1;
+    }
+    xsdk_log_write("STK360 STARTUP: kart SPM file opened");
+
+    if (!loadText("game:\\assets\\black_forest\\quads.xml", &quads_xml))
+    {
+        xsdk_log_write("STK360 STARTUP ERROR: cannot open assets\\black_forest\\quads.xml");
+        return 1;
+    }
+    if (!loadText("game:\\assets\\black_forest\\graph.xml", &graph_xml))
+    {
+        xsdk_log_write("STK360 STARTUP ERROR: cannot open assets\\black_forest\\graph.xml");
+        return 1;
+    }
+    if (!loadText("game:\\assets\\black_forest\\track.xml", &track_xml))
+    {
+        xsdk_log_write("STK360 STARTUP ERROR: cannot open assets\\black_forest\\track.xml");
+        return 1;
+    }
+    xsdk_log_write("STK360 STARTUP: all five asset files opened");
 
     stk360::SPMModel track_model;
     stk360::SPMModel kart_model;
     std::string error;
 
+    xsdk_log_write("STK360 STARTUP: parsing track SPM");
     if (stk360::SPMReader::read(&track_bytes[0],
             static_cast<unsigned int>(track_bytes.size()),
             &track_model, &error) != stk360::SPM_READ_OK)
     {
+        xsdk_log_write("STK360 STARTUP ERROR: track SPM parse failed");
         xsdk_log_write(error.c_str());
         return 1;
     }
+    xsdk_log_write("STK360 STARTUP: track SPM parsed");
+
     if (stk360::SPMReader::read(&kart_bytes[0],
             static_cast<unsigned int>(kart_bytes.size()),
             &kart_model, &error) != stk360::SPM_READ_OK)
     {
+        xsdk_log_write("STK360 STARTUP ERROR: kart SPM parse failed");
         xsdk_log_write(error.c_str());
         return 1;
     }
+    xsdk_log_write("STK360 STARTUP: kart SPM parsed");
 
     stk360::TrackData track;
+    xsdk_log_write("STK360 STARTUP: parsing track XML");
     if (stk360::TrackDataReader::readQuads(quads_xml.data(),
             static_cast<unsigned int>(quads_xml.size()), &track, &error) !=
         stk360::TRACK_READ_OK ||
@@ -297,9 +330,11 @@ int main()
             static_cast<unsigned int>(track_xml.size()), &track, &error) !=
         stk360::TRACK_READ_OK)
     {
+        xsdk_log_write("STK360 STARTUP ERROR: track XML parse failed");
         xsdk_log_write(error.c_str());
         return 1;
     }
+    xsdk_log_write("STK360 STARTUP: track XML parsed");
 
     stk360::KartState kart;
     if (!stk360::KartDynamics::initialize(track, &kart))
@@ -309,11 +344,13 @@ int main()
     }
 
     redraw::XsdkRenderDevice renderer;
+    xsdk_log_write("STK360 STARTUP: initializing Xenos renderer");
     if (!renderer.initialize(1280, 720))
     {
-        xsdk_log_write("SuperTuxKart360: Xenos renderer initialization failed");
+        xsdk_log_write("STK360 STARTUP ERROR: Xenos renderer initialization failed");
         return 1;
     }
+    xsdk_log_write("STK360 STARTUP: Xenos renderer initialized");
 
     std::vector<DrawItem> track_items;
     std::vector<DrawItem> kart_items;
