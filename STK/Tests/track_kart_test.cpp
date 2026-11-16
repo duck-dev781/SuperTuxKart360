@@ -2,6 +2,7 @@
 #include "../Source/KartDynamics.h"
 
 #include <cmath>
+#include <cstring>
 #include <iostream>
 #include <string>
 
