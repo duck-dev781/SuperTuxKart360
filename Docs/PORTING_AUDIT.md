@@ -55,7 +55,9 @@ Advanced effects, dynamic shadows, post-processing, and shader variants are defe
 - The STK source baseline is pinned in `Docs/UPSTREAM.md`; the matching historical runtime asset revision and per-file license inventory remain unverified.
 - `xenosworks/xsdk` is pinned in `Build/Build-Xbox360.sh` as the current community homebrew SDK/toolchain. `Docs/XBOX360_TOOLCHAIN.md` records its scope and build steps.
 - `Redraw/Xbox360/XsdkRenderDevice.cpp` implements an initial Xenos GPU backend for frame presentation, indexed meshes, a basic shader pair, one 32-bit texture format, depth/culling/blending state, and basic controller input in its renderer test title.
-- `STK/Source/SPMReader.cpp` is a portable little-endian reader for the official STK SPM mesh format. It decodes static meshes and marks skinned meshes as requiring a later skinning implementation. Its current test uses a synthetic fixture; official asset validation is still required.
+- `STK/Source/SPMReader.cpp` is a portable little-endian reader for the official STK SPM mesh format. It has passed both a synthetic fixture and real upstream Adiumy/Black Forest SPM files at SVN revision 18627. Adiumy is skinned; Black Forest's track mesh is static.
+- `STK/Source/SPMRedrawBridge.cpp` converts SPM LODs into Redraw vertices and splits large index streams to the current 65,535-index Xenos draw limit.
+- `STK/Source/TrackDataReader.cpp` parses track quads, graph edges, and basic track metadata. It has parsed Black Forest's 1,807 quads and main loop (0-1054). `STK/Source/KartDynamics.cpp` adds a first-pass arcade movement model with on-road checks; this is not STK's Bullet physics.
 - The current renderer test is not a playable STK build. No STK race loop, Bullet physics, menus, music, SFX, AI, or official kart/track rendering is connected yet.
 
 ## Not decided yet
