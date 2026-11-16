@@ -8,6 +8,7 @@ public:
     bool beginFrame() { return true; }
     void clear(const redraw::Color&, bool) {}
     void setViewProjection(const redraw::Matrix4&, const redraw::Matrix4&) {}
+    void setWorld(const redraw::Matrix4&) {}
     redraw::MeshHandle createMesh(const redraw::MeshDesc&) { return 1; }
     void releaseMesh(redraw::MeshHandle) {}
     redraw::TextureHandle createTexture(const redraw::TextureDesc&) { return 1; }
