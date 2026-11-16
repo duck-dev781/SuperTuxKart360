@@ -22,9 +22,9 @@ The official runtime assets are stored separately in the SuperTuxKart SourceForg
 
 `https://svn.code.sf.net/p/supertuxkart/code/stk-assets`
 
-The fetch workflow has successfully checked out and packaged the runtime asset tree, and its recorded SVN revision was **18627** in the successful 2026-11-16 run. The normal fetch script currently defaults to the repository's `HEAD`, so that number is a recorded fetch result, not yet a pinned historical revision proven to match the source commit above.
+The full asset-fetch workflow has successfully checked out and packaged the runtime asset tree; its recorded SVN revision was **18627** in the successful 2026-11-16 run. The initial Xbox drive-slice build now explicitly pins **18627** for the selected Adiumy kart and Black Forest track folders. That is a reproducible asset input for this prototype, not proof that revision 18627 is the historically matching asset revision for the source commit above. The full asset-fetch script still defaults to the repository's `HEAD`.
 
-Do not describe source commit `b2a9f223326422aa2dd4eea28319b0c5115fde03` plus asset revision 18627 as a tested compatible pair until the upstream history and asset compatibility have been checked. The fetch workflow's lock file records the exact pair it actually downloaded on each run.
+Do not describe source commit `b2a9f223326422aa2dd4eea28319b0c5115fde03` plus asset revision 18627 as a historically matched upstream pair until the upstream history and asset compatibility have been checked. The current SPM and track-XML parsers have been tested against the selected revision's Adiumy and Black Forest files, which proves those formats can be decoded, not that every asset matches the pinned game source.
 
 ## Next verification tasks
 
