@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out SuperTuxKart360
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install Subversion
         run: |
@@ -41,7 +41,7 @@ jobs:
             -C External stk-code stk-assets stk-upstream-lock.txt
 
       - name: Upload upstream source and runtime assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stk-upstream-inputs
           path: stk-upstream-inputs.tar.gz
