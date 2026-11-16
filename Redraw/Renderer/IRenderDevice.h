@@ -81,6 +81,7 @@ namespace redraw
         virtual void clear(const Color& color, bool clear_depth) = 0;
         virtual void setViewProjection(const Matrix4& view,
                                        const Matrix4& projection) = 0;
+        virtual void setWorld(const Matrix4& world) = 0;
 
         virtual MeshHandle createMesh(const MeshDesc& desc) = 0;
         virtual void releaseMesh(MeshHandle mesh) = 0;
