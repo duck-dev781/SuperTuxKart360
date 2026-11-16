@@ -27,6 +27,10 @@ int main()
     if (result.axes[stk360::STK_AXIS_RIGHT_TRIGGER] < 16400 ||
         result.axes[stk360::STK_AXIS_RIGHT_TRIGGER] > 16500) return 10;
 
+    source.thumb_ly = (-32767 - 1);
+    stk360::translateXInput(source, &result);
+    if (result.axes[stk360::STK_AXIS_LEFT_Y] != 32767) return 11;
+
     stk360::translateXInput(source, 0);
     return 0;
 }
