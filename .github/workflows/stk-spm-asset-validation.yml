@@ -51,6 +51,12 @@ jobs:
           svn export --quiet -r "$revision" "$base/karts/adiumy/licenses.txt" Build/AssetProbe/licenses/adiumy-licenses.txt
           svn export --quiet -r "$revision" "$base/tracks/black_forest/licenses.txt" Build/AssetProbe/licenses/black_forest-licenses.txt
           sha256sum Build/AssetProbe/*.spm
+          echo "=== Official shared texture directory ==="
+          svn ls -r "$revision" "$base/textures" | head -100
+          echo "=== Official Black Forest folder ==="
+          svn ls -r "$revision" "$base/tracks/black_forest" | head -100
+          echo "=== Official Adiumy folder ==="
+          svn ls -r "$revision" "$base/karts/adiumy" | head -100
           echo '=== Black Forest track quads ==='
           sed -n '1,180p' Build/AssetProbe/black_forest-quads.xml
           echo '=== Black Forest track graph ==='
