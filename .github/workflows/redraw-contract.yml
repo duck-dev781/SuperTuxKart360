@@ -56,3 +56,12 @@ jobs:
 
       - name: Run STK-to-Redraw bridge test
         run: ./spm-redraw-bridge-test
+
+      - name: Compile track data and kart dynamics test
+        run: |
+          g++ -std=c++03 -Wall -Wextra -Werror -pedantic \
+            STK/Source/TrackDataReader.cpp STK/Source/KartDynamics.cpp \
+            STK/Tests/track_kart_test.cpp -o track-kart-test
+
+      - name: Run track data and kart dynamics test
+        run: ./track-kart-test
