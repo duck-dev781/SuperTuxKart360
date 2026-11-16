@@ -128,11 +128,11 @@ namespace redraw
         if (!NT_SUCCESS(status))
             return false;
 
-        status = xsdk_shader_load(&m_vertex_shader, redraw_xbox360_vert.container,
-                                  redraw_xbox360_vert.container_bytes);
+        status = xsdk_shader_load(&m_vertex_shader, redraw_vert.container,
+                                  redraw_vert.container_bytes);
         if (NT_SUCCESS(status))
-            status = xsdk_shader_load(&m_pixel_shader, redraw_xbox360_frag.container,
-                                      redraw_xbox360_frag.container_bytes);
+            status = xsdk_shader_load(&m_pixel_shader, redraw_frag.container,
+                                      redraw_frag.container_bytes);
         if (NT_SUCCESS(status))
             status = xsdk_shader_set_vertex_layout(
                 &m_vertex_shader, kVertexLayout,
@@ -391,8 +391,8 @@ namespace redraw
         const XsdkTexture* bound_texture = texture ? &texture->texture : &m_white_texture;
 
         xsdk_gpu_set_shaders(&m_vertex_shader, &m_pixel_shader);
-        xsdk_built_shader_set_literals(&redraw_xbox360_vert);
-        xsdk_built_shader_set_literals(&redraw_xbox360_frag);
+        xsdk_built_shader_set_literals(&redraw_vert);
+        xsdk_built_shader_set_literals(&redraw_frag);
         const Matrix4 mvp = multiply(m_view_projection, m_world);
         xsdk_gpu_set_vertex_constants(0, mvp.m, 4);
 
